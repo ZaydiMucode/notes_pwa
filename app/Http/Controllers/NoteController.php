@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 
 class NoteController extends Controller
 {
-    public function home(){
-        return view('notes.home');
-    }
+   
     public function index()
     {
         return view('notes.index', [
@@ -40,6 +38,19 @@ class NoteController extends Controller
         $note->delete();
         return back();
     }
+    
+    public function showNote()
+    {
+        return view('notes.showNote');
+    }
+    public function dashboard()
+    {
+   
+    $notes = Note::latest()->get();
+    
+    return view('dashboard', compact('notes'));
+    }
+
 }
 
 

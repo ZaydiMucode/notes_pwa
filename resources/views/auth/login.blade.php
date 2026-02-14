@@ -9,7 +9,7 @@
             Login to your account
         </h2>
 
-        <form action="/index" class="space-y-6">
+        <form action="{{route('login')}}" method ="POST" class="space-y-6">
             
             @csrf
 
