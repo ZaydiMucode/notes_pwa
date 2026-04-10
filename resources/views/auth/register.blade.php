@@ -65,11 +65,20 @@
             <input type="password" name="password" class="form-control" placeholder="Password">
             @error('password') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
+        <div class="mb-3">
+            <label class="form-label">Admin Key (optional)</label>
+            <input type="text" name="admin_key" class="form-control">
+        </div>
+
 
         <button type="submit" class="btn btn-primary w-100">
             Register
         </button>
+        <div>
+            Already have an account? <a href="{{ route('login') }}">Login here</a>
+        </div>
     </form>
+         
 </div>
 
 </body>

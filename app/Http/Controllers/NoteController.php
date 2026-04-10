@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NoteController extends Controller
 {
@@ -21,8 +23,12 @@ class NoteController extends Controller
             'title' => 'required',
             'content' => 'required'
         ]);
-
-        Note::create($request->all());
+        Auth::user()->notes()->create([
+        'title' => $request->title,
+        'content' => $request->content
+    ]);
+    
+    
 
         return back();
     }
@@ -45,12 +51,16 @@ class NoteController extends Controller
     }
     public function dashboard()
     {
-   
-    $notes = Note::latest()->get();
+    $user =Auth::user();
+    if ($user->role == 1) {
     
-    return view('dashboard', compact('notes'));
+        $notes = Note::with('user')->latest()->get();
+        return view('admin.dashboard', compact('notes'));
     }
 
+    $notes = $user->notes;
+    return view('dashboard', compact('notes'));
+
+
 }
-
-
+}

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -20,30 +19,38 @@ class AuthController extends Controller
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|min:6',
         ]);
+        $role = 0;
+
+        if ($request->admin_key === 'admin123') {
+        $role = 1;
+    }
 
         $user = User::create([
             'name'     => $validated['name'],
             'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'role'     => $role 
         ]);
 
-     
+
         Auth::login($user);
-    return redirect()->route('dashboard');
-    }
-
- 
-   public function login(Request $request)
-{
-    $credentials = $request->validate([
-        'email'    => 'required|email',
-        'password' => 'required',
-    ]);
-
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
         return redirect()->route('dashboard');
     }
+
+    public function showlogin() {
+        return view('auth.login');
+    }
+
+    public function login(Request $request) {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('dashboard');
+        }
 
     return back()
         ->withInput($request->only('email'))

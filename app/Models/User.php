@@ -21,7 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
+    public function isAdmin(){
+        return $this->role==1;
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -45,4 +49,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function notes(){
+    return $this->hasMany(Note::class);
+    }
+
 }

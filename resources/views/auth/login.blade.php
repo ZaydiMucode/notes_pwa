@@ -52,7 +52,9 @@
                     Log in
                 </button>
             </div>
-
+            <div>
+                    Create an account <a href="{{ route('register') }}">Register here</a>
+            </div>
         </form>
 
     </div>

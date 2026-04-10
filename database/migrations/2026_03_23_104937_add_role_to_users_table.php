@@ -11,21 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('notes', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        $table->string('title');
-        $table->text('content');
-        $table->timestamps();
-    });
+        Schema::table('users', function (Blueprint $table) {
+            $table->tinyInteger('role')->default(0)->change();
+        });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('notes');
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->default('user')->change();
+        });
     }
 };
