@@ -5,6 +5,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -37,9 +39,39 @@ class AuthController extends Controller
         return redirect()->route('dashboard');
     }
 
-    public function showlogin() {
-        return view('auth.login');
+public function showLogin()
+    {
+        $apiKey = env('OPENWEATHER_API_KEY');
+        $city = 'Sogod, Southern Leyte';
+
+        $weather = null;
+        try {
+            $response = Http::timeout(10)->get("https://api.openweathermap.org/data/2.5/weather", [
+                'q' => $city,
+                'appid' => $apiKey,
+                'units' => 'metric'
+            ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                $weather = [
+                    'temp' => $data['main']['temp'],
+                    'description' => $data['weather'][0]['description'],
+                    'city' => $data['name']
+                ];
+                Log::info('Weather fetched successfully', $weather);
+            } else {
+                Log::warning('Weather API returned: ' . $response->status());
+            }
+        } catch (\Exception $e) {
+            Log::error('Weather API error: ' . $e->getMessage());
+            $weather = null;
+        }
+
+        return view('auth.login', compact('weather'));
     }
+
 
     public function login(Request $request) {
         $credentials = $request->validate([

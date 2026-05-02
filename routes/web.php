@@ -9,9 +9,7 @@ Route::get('/register', [AuthController::class, 'index'])->name('register');
 Route::post('/register', [AuthController::class, 'store'])->name('register');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/register', [AuthController::class, 'store'])->name('register.store');
-Route::get('/', function () {
-    return view('auth.login');
-})->name('login');
+Route::get('/', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/', [AuthController::class, 'login']);
 Route::get('/dashboard', [NoteController::class, 'dashboard'])
     ->middleware('auth')
